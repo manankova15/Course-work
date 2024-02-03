@@ -1,18 +1,18 @@
 import json
-
+import re
+from langdetect import detect
 def get_converted_json(parsed_json):
     result = {}
 
-    if parsed_json.get("problem_type", None) != None:
-        result["problem_type"] = parsed_json.get("problem_type")
-    else:
-        result["problem_type"] = "problemWithChecker"
+    block = parsed_json.get("block", {})
+
+    result["problem_type"] = parsed_json.get("problem_type", "WITH_CHECKER")
 
     result["id"] = parsed_json.get("id")
 
-    result["correct_solution_code"] = parsed_json.get("source", {}).get("code", "")
+    result["code_for_testing"] = block.get("source", {}).get("code", "")
 
-    result["problem_description"] = parsed_json.get("block", {}).get("text", "")
+    result["problem_description"] = block.get("text", "")
 
     result["required_files"] = {
         "input_file": None,
@@ -21,44 +21,39 @@ def get_converted_json(parsed_json):
         "redirect_stdout": True
     }
 
-    result["solution_code_template"] = {
-        "python3": parsed_json.get("options", {}).get("code_templates", {}).get("python3", ""),
-        "kotlin": parsed_json.get("options", {}).get("code_templates", {}).get("kotlin", ""),
-        "c++": None
-    }
+    result["code_template"] = {}
+    templates = block.get("source", {}).get("templates_data", {})
+    matches = re.findall(r'::(\w+)(?:\n|$)(.*?)(?=::|\Z)', templates, re.DOTALL)
+    for match in matches:
+        language = match[0]
+        code = match[1].strip()
+        result["code_template"][language] = code
 
+    problem_name = block.get("name", "")
+    languages_to_check_first = ['ru', 'en']
+    for lang in languages_to_check_first:
+        if lang in detect(problem_name):
+            language = lang
+            break
+    else:
+        language = detect(problem_name)
     result["problem_name"] = {
-        "ru": None,
-        "en": None
+        language: problem_name
     }
 
-    result["constraints"] = {
-        "execution_time_limit_sec": parsed_json.get("options", {}).get("execution_time_limit"),
-        "execution_memory_limit": parsed_json.get("options", {}).get("execution_memory_limit"),
-        "output_limit": None
-    }
-
-    result["answer_format"] = {
-        "type": "text",
-        "max_source_size_kb": None,
-        "pattern": None
-    }
-
-    result["execution_constraints"] = {
-        "time_limit_seconds": None,
-        "idleness_limit_millis": None,
-        "memory_limit_mb": None,
-        "output_limit": None,
-        "private_constraints": {
-            "python3": {
-                "time_limit_seconds": parsed_json.get("options", {}).get("limits", {}).get("python3", {}).get("time"),
-                "memory_limit_mb": parsed_json.get("options", {}).get("limits", {}).get("python3", {}).get("memory")
-            },
-            "kotlin": {
-                "time_limit_seconds": parsed_json.get("options", {}).get("limits", {}).get("kotlin", {}).get("time"),
-                "memory_limit_mb": parsed_json.get("options", {}).get("limits", {}).get("kotlin", {}).get("memory")
-            }
+    private_constraints = {}
+    limits = block.get("options", {}).get("limits", {})
+    for lang, lang_limits in limits.items():
+        private_constraints[lang] = {
+            "time_limit_seconds": lang_limits.get("time", None),
+            "memory_limit_mb": lang_limits.get("memory", None)
         }
+    result["execution_constraints"] = {
+        "time_limit_seconds": block.get("options", {}).get("execution_time_limit", None),
+        "idleness_limit_millis": None,
+        "memory_limit_mb": block.get("options", {}).get("execution_memory_limit"),
+        "output_limit": None,
+        "private_constraints": private_constraints
     }
 
     result["compilation_constraints"] = {
@@ -68,9 +63,9 @@ def get_converted_json(parsed_json):
         "output_limit": None
     }
 
-    result["file_tests"] = []
+    result["file_tests"] = block.get("source", {}).get("test_archive", [])
 
-    result["test_cases"] = []
+    result["test_cases"] = block.get("source", {}).get("test_cases", [])
 
     result["checker_settings"] = {
         "checker_type": None,
@@ -95,4 +90,3 @@ def convert_stepic_to_lti(path):
 def call_converter_from_stepic():
     lti_json = convert_stepic_to_lti('/Users/manankova15/Desktop/курсач/степик.step')
     print(json.dumps(lti_json, indent=4, ensure_ascii=False).encode('utf-8').decode())
-    print("___________________________________________________")

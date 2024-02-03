@@ -1,5 +1,6 @@
 import json
 
+
 def decode_unicode(json_data):
     if isinstance(json_data, dict):
         decoded_dict = {}
@@ -13,22 +14,23 @@ def decode_unicode(json_data):
     else:
         return json_data
 
+
 def get_problem(yandex_json):
     if "problemMetadata" in yandex_json:
         yandex_json = yandex_json.get("problemMetadata", {})
 
     lti_json = {}
 
-    if yandex_json.get("problemTypeMeta", None) != None :
+    if yandex_json.get("problemTypeMeta", None) != None:
         lti_json["problem_type"] = yandex_json.get("problemTypeMeta", "WITH_CHECKER")
-    elif yandex_json.get("__type", None) != None :
+    elif yandex_json.get("__type", None) != None:
         lti_json["problem_type"] = yandex_json.get("__type", "WITH_CHECKER")
-
 
     lti_json["id"] = yandex_json.get("id", None)
     lti_json["correct_solution_code"] = yandex_json.get("solutions", None)
     if len(yandex_json.get("statements", None)) > 0:
-        lti_json["problem_description"] = yandex_json.get("statements", None)[0].get("markdownStatement", None).get("legend", None)
+        lti_json["problem_description"] = yandex_json.get("statements", None)[0].get("markdownStatement", None).get(
+            "legend", None)
     else:
         lti_json["problem_description"] = None
 
@@ -45,29 +47,21 @@ def get_problem(yandex_json):
     lti_json["problem_name"] = yandex_json.get("names", None)
 
     solution_limits = yandex_json.get("solutionLimits", {})
-    lti_json["constraints"] = {
-        "execution_time_limit_sec": int(solution_limits.get("timeLimitMillis", 0)) / 1000 if solution_limits.get("timeLimitMillis", None)!=None else None,
-        "execution_memory_limit": solution_limits.get("memoryLimit", None),
-        "output_limit": solution_limits.get("outputLimit", None)
-    }
-
-    lti_json["answer_format"] = {
-        "type": yandex_json.get("testFileType", None),
-        "max_source_size_kb": yandex_json.get("sourceSizeLimit", None),
-        "pattern": None
-    }
 
     lti_json["execution_constraints"] = {
-        "time_limit_seconds": int(solution_limits.get("timeLimitMillis", 0)) / 1000 if solution_limits.get("timeLimitMillis", None) != None else None,
+        "time_limit_seconds": int(solution_limits.get("timeLimitMillis", 0)) / 1000 if solution_limits.get(
+            "timeLimitMillis", None) != None else None,
         "idleness_limit_millis": solution_limits.get("idlenessLimitMillis", None),
-        "memory_limit_mb": solution_limits.get("memoryLimit", None),
+        "memory_limit_mb": int(solution_limits.get("memoryLimit", 0)) / (1024 * 1024) if solution_limits.get(
+            "memoryLimit", None) != None else None,
         "output_limit": solution_limits.get("outputLimit", None),
         "private_constraints": None
     }
 
     compilation_limits = yandex_json.get("compilationLimits", {})
     lti_json["compilation_constraints"] = {
-        "time_limit_seconds": int(compilation_limits.get("timeLimitMillis", 0)) / 1000 if compilation_limits.get("timeLimitMillis", None) != None else None,
+        "time_limit_seconds": int(compilation_limits.get("timeLimitMillis", 0)) / 1000 if compilation_limits.get(
+            "timeLimitMillis", None) != None else None,
         "idleness_limit_millis": compilation_limits.get("idlenessLimitMillis", None),
         "memory_limit_mb": compilation_limits.get("memoryLimit", None),
         "output_limit": compilation_limits.get("outputLimit", None)
@@ -98,7 +92,9 @@ def get_problem(yandex_json):
     lti_json["checker_settings"] = {
         "checker_type": checker_settings.get("checkerType", None),
         "limits": {
-            "time_limit_millis": int(checker_settings.get("limits", {}).get("timeLimitMillis", 0)) if checker_settings.get("limits", {}).get("timeLimitMillis", None) != None else None,
+            "time_limit_millis": int(
+                checker_settings.get("limits", {}).get("timeLimitMillis", 0)) if checker_settings.get("limits", {}).get(
+                "timeLimitMillis", None) != None else None,
             "idleness_limit_millis": checker_settings.get("limits", {}).get("idlenessLimitMillis", None),
             "memory_limit_mb": checker_settings.get("limits", {}).get("memoryLimit", None),
             "output_limit": checker_settings.get("limits", {}).get("outputLimit", None)
@@ -106,6 +102,7 @@ def get_problem(yandex_json):
     }
 
     return lti_json
+
 
 def convert_yandex_to_lti(path):
     with open(path, 'r', encoding='utf-8') as file:

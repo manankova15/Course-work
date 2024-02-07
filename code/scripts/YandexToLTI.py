@@ -120,13 +120,17 @@ def convert_yandex_to_lti(path):
 
 
 def call_converter_from_yandex():
-    lti_json = convert_yandex_to_lti('/Users/manankova15/Desktop/курсач/яндекс.json')
-    print(json.dumps(lti_json, indent=4, ensure_ascii=False).encode('utf-8').decode())
-    print("___________________________________________________")
+    # lti_json = convert_yandex_to_lti('/Users/manankova15/Desktop/курсач/яндекс.json')
+    # print(json.dumps(lti_json, indent=4, ensure_ascii=False).encode('utf-8').decode())
+    # print("___________________________________________________")
+    #
+    # lti_json = convert_yandex_to_lti('/Users/manankova15/Desktop/курсач/yandex_ful.json')
+    # print(json.dumps(lti_json, indent=4, ensure_ascii=False).encode('utf-8').decode())
+    # print("___________________________________________________")
+    #
+    # lti_json = convert_yandex_to_lti('/Users/manankova15/Desktop/курсач/meta.json')
+    # print(json.dumps(lti_json, indent=4, ensure_ascii=False).encode('utf-8').decode())
 
-    lti_json = convert_yandex_to_lti('/Users/manankova15/Desktop/курсач/yandex_ful.json')
+    lti_json = convert_yandex_to_lti('/Users/manankova15/Desktop/курсач/yan_from_lti.json')
     print(json.dumps(lti_json, indent=4, ensure_ascii=False).encode('utf-8').decode())
-    print("___________________________________________________")
 
-    lti_json = convert_yandex_to_lti('/Users/manankova15/Desktop/курсач/meta.json')
-    print(json.dumps(lti_json, indent=4, ensure_ascii=False).encode('utf-8').decode())

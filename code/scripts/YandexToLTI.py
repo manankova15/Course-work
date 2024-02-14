@@ -116,7 +116,7 @@ def convert_yandex_to_lti(path):
     else:
         lti_json = get_problem(yandex_json)
 
-    return lti_json
+    return {"problems": lti_json}
 
 
 def call_converter_from_yandex():

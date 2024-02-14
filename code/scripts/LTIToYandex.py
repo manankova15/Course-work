@@ -92,7 +92,6 @@ def convert_lti_to_yandex(path):
     yandex_json = convert_problem(lti_json)
     return yandex_json
 
-
 def call_converter_to_yandex():
     #yandex_json = convert_lti_to_yandex(lti_json)
     yandex_json = convert_lti_to_yandex('/Users/manankova15/Desktop/курсач/my.json')

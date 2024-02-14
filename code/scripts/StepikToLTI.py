@@ -77,7 +77,7 @@ def get_converted_json(parsed_json):
         }
     }
 
-    return result
+    return {"problems": [result]}
 
 def convert_stepic_to_lti(path):
     with open(path, 'r', encoding='utf-8') as file:

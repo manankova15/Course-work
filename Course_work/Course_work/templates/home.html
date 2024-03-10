@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Conversion Tool</title>
+    <style>
+        #error_message {
+            color: red;
+        }
+        #result {
+            font-size: 0.8em; /* Уменьшаем размер шрифта */
+            padding: 10px; /* Добавляем отступ */
+            background-color: #f0f0f0; /* Добавляем фоновый цвет */
+            border-radius: 5px; /* Добавляем скругленные углы */
+            margin-top: 20px; /* Добавляем отступ сверху */
+            white-space: pre-wrap; /* Позволяет сохранять пробелы и переносы строк */
+        }
+    </style>
+</head>
+<body>
+    <h1>Select Conversion Option</h1>
+    <form action="{% url 'convert' %}" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <select name="conversion_option">
+            <option value="1">Convert Yandex Contest to LTI</option>
+            <option value="2">Convert Stepik to LTI</option>
+            <option value="3">Convert SmartLMS to LTI</option>
+            <option value="4">Convert LTI to Yandex Contest</option>
+            <option value="5">Convert LTI to Stepik</option>
+            <option value="6">Convert LTI to SmartLMS</option>
+        </select>
+        <br><br>
+        <input type="file" name="file" value="Choose file">
+        <br><br>
+        <input type="submit" value="Convert">
+    </form>
+
+    <div id="error_message" style="color: red;">
+    </div>
+
+    <div id="result">
+        <!-- Display result JSON here -->
+    </div>
+
+    <script>
+        // JavaScript для отображения результата
+        document.querySelector('form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            fetch(this.action, {
+                method: this.method,
+                body: new FormData(this),
+                headers: {
+                    'X-CSRFToken': document.querySelector('input[name="csrfmiddlewaretoken"]').value
+                }
+            })
+
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+
+            .then(data => {
+                // Если получен JSON с ключом "error", отобразить его как ошибку
+                if (data.error) {
+                    document.getElementById('error_message').innerText = data.error;
+                    document.getElementById('result').innerText = ''; // Очистить поле с результатом
+                } else {
+                    document.getElementById('result').innerText = JSON.stringify(data, null, 4);
+                    document.getElementById('error_message').innerText = ''; // Очистить поле с ошибкой, если она была
+                }
+            })
+
+            .catch(error => {
+                console.error('Error:', error);
+                document.getElementById('error_message').innerText = 'Error'; // Установить сообщение об ошибке
+                document.getElementById('result').innerText = ''; // Очистить поле с результатом
+            });
+
+        });
+    </script>
+</body>
+</html>

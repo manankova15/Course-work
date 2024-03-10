@@ -1,0 +1,181 @@
+{"problems":
+[{
+  "problem_type": "problemWithChecker",
+  "id": "12345",
+  "code_for_testing": "# This is a sample of code solution ...",
+  "problem_description": "<p>Напишите условие вашей задачи здесь.</p>",
+  "required_files": {
+    "input_file": "input.txt",
+    "output_file": "output.txt",
+    "redirect_stdin": true,
+    "redirect_stdout": true
+  },
+  "code_template": {
+    "python3": "def add_numbers(a, b):",
+    "kotlin": "fun addNumbers(a: Int, b: Int): Int {\n}",
+    "c++": "int addNumbers(int a, int b) {\n}"
+  },
+  "problem_name": {
+    "ru": "Название задачи на русском",
+    "en": "Name of the task in English"
+  },
+  "execution_constraints": {
+    "time_limit_seconds": 10,
+    "idleness_limit_millis": 10000,
+    "memory_limit_mb": 67108864,
+    "output_limit": 67108864,
+    "private_constraints": {
+      "python3": {
+        "time_limit_seconds": 3,
+        "memory_limit_mb": 256
+      },
+      "kotlin": {
+        "time_limit_seconds": 2,
+        "memory_limit_mb": 256
+      }
+    }
+  },
+  "compilation_constraints": {
+    "time_limit_seconds": 60,
+    "idleness_limit_millis": 60000,
+    "memory_limit_mb": 1598029824,
+    "output_limit": 100000000
+  },
+  "file_tests": [
+    {
+      "name": "samples",
+      "input_file_pattern": "new_tests/{1}",
+      "answer_file_pattern": "*.a",
+      "tests": [
+        {
+          "input_path": "new_tests/1",
+          "answer_path": "new_tests/1.a",
+          "input_exists": true,
+          "answer_exists": true
+        }
+      ]
+    },
+    {
+      "name": "All tests",
+      "input_file_pattern": "new_tests/{1-}",
+      "answer_file_pattern": "*.a",
+      "tests": [
+        {
+          "input_path": "new_tests/1",
+          "answer_path": "new_tests/1.a",
+          "input_exists": true,
+          "answer_exists": true
+        },
+        {
+          "input_path": "new_tests/2",
+          "answer_path": "new_tests/2.a",
+          "input_exists": true,
+          "answer_exists": true
+        }
+      ]
+    }
+  ],
+  "test_cases": [
+    {
+      "input": "5 5",
+      "expected_output": "10"
+    },
+    {
+      "input": "10 -2",
+      "expected_output": "8"
+    }
+  ],
+  "checker_settings": {
+    "checker_type": "standardChecker",
+    "limits": {
+      "time_limit_seconds": 10,
+      "idleness_limit_millis": 10000,
+      "memory_limit_mb": 268435456,
+      "output_limit": 268435456
+    }
+  }
+},
+{
+  "problem_type": "problemWithChecker",
+  "id": "666",
+  "code_for_testing": "# code solution ...",
+  "problem_description": "<p>Напишите условие вашей задачи здесь.</p>",
+  "required_files": {
+    "input_file": "input.txt",
+    "output_file": "output.txt",
+    "redirect_stdin": true,
+    "redirect_stdout": true
+  },
+  "code_template": {
+    "python3": "def div_numbers(a, b):",
+    "kotlin": "fun divNumbers(a: Int, b: Int): Int {\n}",
+    "c++": "int divNumbers(int a, int b) {\n}"
+  },
+  "problem_name": {
+    "ru": "Название задачи на русском",
+    "en": "Name of the task in English"
+  },
+  "execution_constraints": {
+    "time_limit_seconds": 2,
+    "idleness_limit_millis": 10000,
+    "memory_limit_mb": 67108864,
+    "output_limit": 67108864,
+    "private_constraints": {
+      "python3": {
+        "time_limit_seconds": 3,
+        "memory_limit_mb": 256
+      },
+      "kotlin": {
+        "time_limit_seconds": 2,
+        "memory_limit_mb": 256
+      }
+    }
+  },
+  "compilation_constraints": {
+    "time_limit_seconds": 60,
+    "idleness_limit_millis": 60000,
+    "memory_limit_mb": 1598029824,
+    "output_limit": 100000000
+  },
+  "file_tests": [
+    {
+      "name": "All tests",
+      "input_file_pattern": "new_tests/{1-}",
+      "answer_file_pattern": "*.a",
+      "tests": [
+        {
+          "input_path": "new_tests/1",
+          "answer_path": "new_tests/1.a",
+          "input_exists": true,
+          "answer_exists": true
+        },
+        {
+          "input_path": "new_tests/2",
+          "answer_path": "new_tests/2.a",
+          "input_exists": true,
+          "answer_exists": true
+        }
+      ]
+    }
+  ],
+  "test_cases": [
+    {
+      "input": "5 5",
+      "expected_output": "10"
+    },
+    {
+      "input": "10 -2",
+      "expected_output": "8"
+    }
+  ],
+  "checker_settings": {
+    "checker_type": "standardChecker",
+    "limits": {
+      "time_limit_seconds": 10,
+      "idleness_limit_millis": 10000,
+      "memory_limit_mb": 268435456,
+      "output_limit": 268435456
+    }
+  }
+}]
+}

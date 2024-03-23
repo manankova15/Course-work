@@ -7,6 +7,9 @@ from scripts.LTIToLMS import call_converter_to_lms
 from scripts.YandexToLTI import call_converter_from_yandex
 from scripts.StepikToLTI import call_converter_from_stepic
 from scripts.LMSToLTI import call_converter_from_lms
+import xml.dom.minidom
+import xml.etree.ElementTree as ET
+
 
 
 def home(request):
@@ -38,12 +41,41 @@ def convert(request):
             elif option == '6':
                 result_json = call_converter_to_lms(uploaded_file)
 
-            # Возвращаем результат в формате JSON
-            return JsonResponse(result_json, safe=False)
+            if option == '6':
+                # Преобразование JSON в XML с помощью xml.dom.minidom
+                # xml_string = (result_json).toprettyxml()
+                # xml_string = xml.dom.minidom(result_json).toprettyxml()
+                # xml_string = ET.tostring(result_json, encoding='utf-8').decode().preattyfy()
+                # response = JsonResponse(xml_string, safe=False)
+
+                xml_string = xml.dom.minidom.parseString(ET.tostring(result_json)).toprettyxml()
+                response = HttpResponse(xml_string, content_type='application/xml')
+            else:
+                # Возвращаем результат в формате JSON
+                response = JsonResponse(result_json, safe=False)
+
+            # Если параметр format равен 'download', возвращаем файл в нужном формате
+            if request.GET.get('format') == 'download':
+                if option == '6':
+                    filename = 'converted_file.xml'  # Имя файла для формата XML
+                    response = HttpResponse(xml_string, content_type='application/xml')
+                elif option == '5':
+                    filename = 'converted_file.step'  # Имя файла для формата STEP
+                    response = HttpResponse(result_json, content_type='application/step')
+                else:
+                    filename = 'converted_file.json'  # Имя файла по умолчанию
+                    response = HttpResponse(result_json, content_type='application/json')
+
+                # response = HttpResponse(result_json, content_type='application/json')
+                response['Content-Disposition'] = f'attachment; filename="{filename}"'
+
+            return response
         else:
             return HttpResponse("Only POST method is supported for this endpoint.", status=405)
     except Exception as e:
         # Если произошла ошибка, возвращаем сообщение об ошибке
-        return JsonResponse({'error': 'Error during conversion'}, status=500)
+        print("!!!!!")
+        print(e)
+        return JsonResponse({'error': f'Error during conversion'}, status=500)
 
 

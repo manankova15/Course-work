@@ -16,6 +16,15 @@
             margin-top: 20px; /* Добавляем отступ сверху */
             white-space: pre-wrap; /* Позволяет сохранять пробелы и переносы строк */
         }
+        #downloadButton {
+            display: none;
+            background-color: green; /* Задаем зеленый цвет кнопки */
+            color: white; /* Задаем белый цвет текста на кнопке */
+            border: none; /* Убираем границу кнопки */
+            padding: 10px 20px; /* Добавляем отступы вокруг текста кнопки */
+            border-radius: 5px; /* Делаем скругленные углы кнопки */
+            cursor: pointer; /* Устанавливаем курсор указывающий на возможность взаимодействия */
+    }
     </style>
 </head>
 <body>
@@ -36,6 +45,8 @@
         <input type="submit" value="Convert">
     </form>
 
+    <button id="downloadButton" style="display: none;">Download Result</button>
+
     <div id="error_message" style="color: red;">
     </div>
 
@@ -44,42 +55,105 @@
     </div>
 
     <script>
-        // JavaScript для отображения результата
-        document.querySelector('form').addEventListener('submit', function(event) {
-            event.preventDefault();
-            fetch(this.action, {
-                method: this.method,
-                body: new FormData(this),
-                headers: {
-                    'X-CSRFToken': document.querySelector('input[name="csrfmiddlewaretoken"]').value
-                }
-            })
+    // JavaScript для отображения результата
+    document.querySelector('form').addEventListener('submit', function(event) {
+        event.preventDefault();
+        // Скрытие блока с ошибкой и результатом при отправке нового запроса
+        document.getElementById('error_message').innerText = '';
+        document.getElementById('result').innerText = '';
+        document.getElementById('downloadButton').style.display = 'none';
 
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                return response.json();
-            })
+        fetch(this.action, {
+            method: this.method,
+            body: new FormData(this),
+            headers: {
+                'X-CSRFToken': document.querySelector('input[name="csrfmiddlewaretoken"]').value
+            }
+        })
 
-            .then(data => {
-                // Если получен JSON с ключом "error", отобразить его как ошибку
-                if (data.error) {
-                    document.getElementById('error_message').innerText = data.error;
-                    document.getElementById('result').innerText = ''; // Очистить поле с результатом
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.text();
+        })
+
+        .then(data => {
+            // Проверяем, является ли ответ XML
+            if (data.startsWith('<?xml')) {
+                // Если да, отображаем XML-данные
+                document.getElementById('result').innerText = data;
+                document.getElementById('downloadButton').style.display = 'block';
+            } else {
+                // Иначе, это JSON, обрабатываем как обычно
+                const jsonData = JSON.parse(data);
+                if (jsonData.error) {
+                    document.getElementById('error_message').innerText = jsonData.error;
                 } else {
-                    document.getElementById('result').innerText = JSON.stringify(data, null, 4);
-                    document.getElementById('error_message').innerText = ''; // Очистить поле с ошибкой, если она была
+                    document.getElementById('result').innerText = JSON.stringify(jsonData, null, 4);
+                    document.getElementById('downloadButton').style.display = 'block';
                 }
-            })
+            }
+        })
 
-            .catch(error => {
-                console.error('Error:', error);
-                document.getElementById('error_message').innerText = 'Error'; // Установить сообщение об ошибке
-                document.getElementById('result').innerText = ''; // Очистить поле с результатом
-            });
-
+        .catch(error => {
+            console.error('Error:', error);
+            document.getElementById('error_message').innerText = 'Error'; // Установить сообщение об ошибке
         });
-    </script>
+
+    });
+
+    // JavaScript для скрытия блока с ошибкой и результатом при изменении загружаемого файла
+    document.querySelector('input[type="file"]').addEventListener('change', function(event) {
+        document.getElementById('error_message').innerText = '';
+        document.getElementById('result').innerText = '';
+        document.getElementById('downloadButton').style.display = 'none';
+    });
+
+    // JavaScript для скрытия блока с ошибкой и результатом при изменении опции конвертации
+    document.querySelector('select[name="conversion_option"]').addEventListener('change', function(event) {
+        document.getElementById('error_message').innerText = '';
+        document.getElementById('result').innerText = '';
+        document.getElementById('downloadButton').style.display = 'none';
+    });
+
+    // Находим кнопку "Download Result" по id
+    const downloadButton = document.getElementById('downloadButton');
+
+    // Добавляем обработчик события клика
+    downloadButton.addEventListener('click', function() {
+        // Получаем содержимое результата преобразования
+        const resultContent = document.getElementById('result').innerText;
+
+        // Определяем тип MIME и имя файла в зависимости от выбранной опции конвертации
+        let mimeType, filename;
+        const conversionOption = document.querySelector('select[name="conversion_option"]').value;
+        if (conversionOption === '6') {
+            mimeType = 'application/xml';
+            filename = 'converted_file.xml';
+        } else if (conversionOption === '5') {
+            mimeType = 'application/step';
+            filename = 'converted_file.step';
+        } else {
+            mimeType = 'application/json';
+            filename = 'converted_file.json';
+        }
+
+        // Создаем объект Blob с содержимым результата и установленным типом MIME
+        const blob = new Blob([resultContent], { type: mimeType });
+
+        // Создаем временную ссылку на файл
+        const downloadLink = document.createElement('a');
+        downloadLink.href = URL.createObjectURL(blob);
+        downloadLink.download = filename; // Имя файла для скачивания
+        downloadLink.click();
+
+        // Освобождаем ресурсы после скачивания файла
+        URL.revokeObjectURL(downloadLink.href);
+
+    });
+</script>
+
+
 </body>
 </html>

@@ -38,6 +38,12 @@
             <option value="4">Convert LTI to Yandex Contest</option>
             <option value="5">Convert LTI to Stepik</option>
             <option value="6">Convert LTI to SmartLMS</option>
+            <option value="7">Convert Yandex Contest to Stepik</option>
+            <option value="8">Convert Yandex Contest to SmartLMS</option>
+            <option value="9">Convert Stepik to Yandex Contest</option>
+            <option value="10">Convert Stepik to SmartLMS</option>
+            <option value="11">Convert SmartLMS to Yandex Contest</option>
+            <option value="12">Convert SmartLMS to Stepik</option>
         </select>
         <br><br>
         <input type="file" name="file" value="Choose file">
@@ -50,15 +56,11 @@
     <div id="error_message" style="color: red;">
     </div>
 
-    <div id="result">
-        <!-- Display result JSON here -->
-    </div>
+    <div id="result"></div>
 
     <script>
-    // JavaScript для отображения результата
     document.querySelector('form').addEventListener('submit', function(event) {
         event.preventDefault();
-        // Скрытие блока с ошибкой и результатом при отправке нового запроса
         document.getElementById('error_message').innerText = '';
         document.getElementById('result').innerText = '';
         document.getElementById('downloadButton').style.display = 'none';
@@ -79,13 +81,10 @@
         })
 
         .then(data => {
-            // Проверяем, является ли ответ XML
             if (data.startsWith('<?xml')) {
-                // Если да, отображаем XML-данные
                 document.getElementById('result').innerText = data;
                 document.getElementById('downloadButton').style.display = 'block';
             } else {
-                // Иначе, это JSON, обрабатываем как обычно
                 const jsonData = JSON.parse(data);
                 if (jsonData.error) {
                     document.getElementById('error_message').innerText = jsonData.error;
@@ -98,62 +97,59 @@
 
         .catch(error => {
             console.error('Error:', error);
-            document.getElementById('error_message').innerText = 'Error'; // Установить сообщение об ошибке
+            document.getElementById('error_message').innerText = 'Error';
         });
 
     });
 
-    // JavaScript для скрытия блока с ошибкой и результатом при изменении загружаемого файла
+    // Скрытие блока с ошибкой и результатом при изменении загружаемого файла
     document.querySelector('input[type="file"]').addEventListener('change', function(event) {
         document.getElementById('error_message').innerText = '';
         document.getElementById('result').innerText = '';
         document.getElementById('downloadButton').style.display = 'none';
     });
 
-    // JavaScript для скрытия блока с ошибкой и результатом при изменении опции конвертации
+    // Скрытие блока с ошибкой и результатом при изменении опции конвертации
     document.querySelector('select[name="conversion_option"]').addEventListener('change', function(event) {
         document.getElementById('error_message').innerText = '';
         document.getElementById('result').innerText = '';
         document.getElementById('downloadButton').style.display = 'none';
     });
 
-    // Находим кнопку "Download Result" по id
     const downloadButton = document.getElementById('downloadButton');
 
-    // Добавляем обработчик события клика
+    // Обработчик события клика
     downloadButton.addEventListener('click', function() {
-        // Получаем содержимое результата преобразования
         const resultContent = document.getElementById('result').innerText;
 
-        // Определяем тип MIME и имя файла в зависимости от выбранной опции конвертации
         let mimeType, filename;
         const conversionOption = document.querySelector('select[name="conversion_option"]').value;
-        if (conversionOption === '6') {
+        if (conversionOption === '6' || conversionOption === '8' || conversionOption === '10') {
             mimeType = 'application/xml';
-            filename = 'converted_file.xml';
-        } else if (conversionOption === '5') {
+            filename = 'lms_converted_file.xml';
+        } else if (conversionOption === '5' || conversionOption === '7' || conversionOption === '12') {
             mimeType = 'application/step';
-            filename = 'converted_file.step';
+            filename = 'stepik_converted_file.step';
+        } else if (conversionOption === '4' || conversionOption === '9' || conversionOption === '11') {
+            mimeType = 'application/json';
+            filename = 'yandex_converted_file.json';
         } else {
             mimeType = 'application/json';
-            filename = 'converted_file.json';
+            filename = 'lti_converted_file.json';
         }
 
-        // Создаем объект Blob с содержимым результата и установленным типом MIME
         const blob = new Blob([resultContent], { type: mimeType });
 
         // Создаем временную ссылку на файл
         const downloadLink = document.createElement('a');
         downloadLink.href = URL.createObjectURL(blob);
-        downloadLink.download = filename; // Имя файла для скачивания
+        // downloadLink.download = filename;
+        downloadLink.setAttribute('download', filename);
         downloadLink.click();
 
         // Освобождаем ресурсы после скачивания файла
         URL.revokeObjectURL(downloadLink.href);
-
     });
 </script>
-
-
 </body>
 </html>

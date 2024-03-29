@@ -65,7 +65,15 @@ def get_converted_json(parsed_json):
 
     result["file_tests"] = block.get("source", {}).get("test_archive", [])
 
-    result["test_cases"] = block.get("source", {}).get("test_cases", [])
+    # result["test_cases"] = block.get("source", {}).get("test_cases", [])
+    result["test_cases"] = []
+    for test_case in block.get("source", {}).get("test_cases", []):
+        if len(test_case) == 2:
+            input_data, expected_output = test_case
+            result["test_cases"].append({
+                "input": input_data.strip(),
+                "expected_output": expected_output.strip()
+            })
 
     result["checker_settings"] = {
         "checker_type": None,

@@ -2,11 +2,6 @@ import json
 from xml.etree.ElementTree import Element, SubElement, tostring
 import xml.dom.minidom
 
-def prettify(xml_string):
-    """Return a pretty-printed XML string"""
-    reparsed = xml.dom.minidom.parseString(xml_string)
-    return reparsed.toprettyxml(indent="  ")
-
 def convert_problem(lti_data):
     quiz = Element('quiz')
 
@@ -78,13 +73,8 @@ def convert_problem(lti_data):
             display_text.text = 'HIDE'  # Assuming it's always hidden in smartlms
 
     return quiz
-    #return tostring(quiz, encoding='utf-8').decode()
-
 
 def call_converter_to_lms(uploaded_file):
-    # with open('/Users/manankova15/Desktop/курсач/my.json', 'r', encoding='utf-8') as file:
-    #     lti_json = json.load(file)
-
     lti_json = json.loads(uploaded_file.read())
     lms_xml = convert_problem(lti_json)
     return lms_xml

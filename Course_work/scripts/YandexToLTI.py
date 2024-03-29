@@ -27,7 +27,7 @@ def get_problem(yandex_json):
 
     lti_json["id"] = yandex_json.get("id", None)
     lti_json["correct_solution_code"] = yandex_json.get("solutions", None)
-    if len(yandex_json.get("statements", None)) > 0:
+    if yandex_json.get("statements", None) is not None and len(yandex_json.get("statements", None)) > 0:
         lti_json["problem_description"] = yandex_json.get("statements", None)[0].get("markdownStatement", None).get(
             "legend", None)
     else:
@@ -54,7 +54,7 @@ def get_problem(yandex_json):
         "memory_limit_mb": int(solution_limits.get("memoryLimit", 0)) / (1024 * 1024) if solution_limits.get(
             "memoryLimit", None) != None else None,
         "output_limit": solution_limits.get("outputLimit", None),
-        "private_constraints": None
+        "private_constraints": {}
     }
 
     compilation_limits = yandex_json.get("compilationLimits", {})

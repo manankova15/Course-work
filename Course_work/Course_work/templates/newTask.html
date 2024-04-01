@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create a new task in LTI-compatible format</title>
+    <style>
+        .fileTestTemplate {
+            border: 1px solid #000;
+            padding: 10px;
+            margin-bottom: 20px;
+        }
+
+        .fileTestTemplate:not(:last-child) {
+            border-bottom: 1px dashed #000;
+        }
+
+        .testCaseTemplate {
+            border: 1px solid #000;
+            padding: 10px;
+            margin-bottom: 20px;
+        }
+
+        .testCaseTemplate:not(:last-child) {
+            border-bottom: 1px dashed #000;
+        }
+    </style>
+</head>
+
+<body>
+<h1>Create a new task in LTI-compatible format</h1>
+<form id="taskForm" action="{% url 'new_task' %}" method="post">
+    {% csrf_token %}
+    <label for="problem_type"><span style="color: red;">*</span>Problem Type:</label>
+    <input type="text" id="problem_type" name="problem_type" value="problemWithChecker" required><br><br>
+
+    <label for="id">ID:</label>
+    <input type="text" id="id" name="id"><br><br>
+
+    <label for="code_for_testing">Code of correct solution:</label>
+    <textarea id="code_for_testing" name="code_for_testing" rows="3" cols="50"></textarea><br><br>
+
+    <label for="problem_description"><span style="color: red;">*</span>Problem Description:</label>
+    <textarea id="problem_description" name="problem_description" rows="3" cols="50" required></textarea><br><br>
+
+    <h2>Required Files</h2>
+    <label for="input_file">Input File:</label>
+    <input type="text" id="input_file" name="required_files[input_file]" value="input.txt" required><br><br>
+
+    <label for="output_file">Output File:</label>
+    <input type="text" id="output_file" name="required_files[output_file]" value="output.txt" required><br><br>
+
+    <label for="redirect_stdin">Redirect Stdin:</label>
+    <select id="redirect_stdin" name="required_files[redirect_stdin]">
+        <option value="true">True</option>
+        <option value="false">False</option>
+    </select><br><br>
+
+    <label for="redirect_stdout">Redirect Stdout:</label>
+    <select id="redirect_stdout" name="required_files[redirect_stdout]">
+        <option value="true">True</option>
+        <option value="false">False</option>
+    </select><br><br>
+
+    <h2>Code Template</h2>
+    <div id="codeTemplateContainer"></div>
+    <button type="button" id="addLanguage">Add template</button>
+    <br><br>
+
+    <h2>Problem Name</h2>
+    <div id="problemNameContainer">
+        <div class="problemNameTemplate">
+            <label for="language"><span style="color: red;">*</span>Programming Language:</label>
+            <input type="text" class="language" name="problem_name[language][]" value="en" required>
+            <label for="name"><span style="color: red;">*</span>Name:</label>
+            <textarea class="name" name="problem_name[name][]" rows="1" cols="50" required></textarea><br><br>
+        </div>
+    </div>
+    <button type="button" id="addProblemName">Add Problem Name</button>
+    <br><br>
+
+    <h2>Execution Constraints</h2>
+    <label for="time_limit_seconds">Time Limit (seconds):</label>
+    <input type="number" id="time_limit_seconds" name="execution_constraints[time_limit_seconds]" value="2"
+           required><br><br>
+
+    <label for="idleness_limit_millis">Idleness Limit (milliseconds):</label>
+    <input type="number" id="idleness_limit_millis" name="execution_constraints[idleness_limit_millis]" value="10000"
+           required><br><br>
+
+    <label for="memory_limit_mb">Memory Limit (MB):</label>
+    <input type="number" id="memory_limit_mb" name="execution_constraints[memory_limit_mb]" value="64.0"
+           required><br><br>
+
+    <label for="output_limit">Output Limit (MB):</label>
+    <input type="number" id="output_limit" name="execution_constraints[output_limit]" value="64.0" required><br><br>
+
+    <h4>Private Constraints</h4>
+    <div id="privateConstraintsContainer"></div>
+    <button type="button" id="addPrivateConstraints">Add private constraint</button>
+    <br><br>
+
+    <h2>Compilation Constraints</h2>
+    <label for="compilation_time_limit_seconds">Compilation Time Limit (seconds):</label>
+    <input type="number" id="compilation_time_limit_seconds" name="compilation_constraints[time_limit_seconds]"
+           value="60" required><br><br>
+
+    <label for="compilation_idleness_limit_millis">Compilation Idleness Limit (milliseconds):</label>
+    <input type="number" id="compilation_idleness_limit_millis" name="compilation_constraints[idleness_limit_millis]"
+           value="60000" required><br><br>
+
+    <label for="compilation_memory_limit_mb">Compilation Memory Limit (MB):</label>
+    <input type="number" id="compilation_memory_limit_mb" name="compilation_constraints[memory_limit_mb]"
+           value="1024" required><br><br>
+
+    <label for="compilation_output_limit">Compilation Output Limit (MB):</label>
+    <input type="number" id="compilation_output_limit" name="compilation_constraints[output_limit]" value="1024"
+           required><br><br>
+
+    <h2>File Tests</h2>
+    <div id="fileTestsContainer"></div>
+    <button type="button" id="addFileTest">Add new block of file tests</button>
+
+    <h2>Test Cases</h2>
+    <div id="testCasesContainer"></div>
+    <button type="button" id="addTestCase">Add Test Case</button>
+
+    <h2>Checker Settings</h2>
+    <label for="checker_type">Checker Type:</label>
+    <input type="text" id="checker_type" name="checker_settings[checker_type]" value="standardChecker" required><br><br>
+
+    <h4>Limits</h4>
+    <label for="time_limit_seconds">Time Limit (seconds):</label>
+    <input type="number" id="time_limit_seconds" name="checker_settings[limits][time_limit_seconds]" value="60"
+           required><br><br>
+
+    <label for="idleness_limit_millis">Idleness Limit (milliseconds):</label>
+    <input type="number" id="idleness_limit_millis" name="checker_settings[limits][idleness_limit_millis]" value="60000"
+           required><br><br>
+
+    <label for="memory_limit_mb">Memory Limit (MB):</label>
+    <input type="number" id="memory_limit_mb" name="checker_settings[limits][memory_limit_mb]" value="1024"
+           required><br><br>
+
+    <label for="output_limit">Output Limit (MB):</label>
+    <input type="number" id="output_limit" name="checker_settings[limits][output_limit]" value="1024" required><br><br>
+
+    <input type="hidden" id="jsonData" name="jsonData">
+
+    <input type="submit" id="submitButton" value="Submit" style="font-size: 16px; padding: 10px 20px; background-color: #007bff; color: #fff; border: none; border-radius: 5px; cursor: pointer; margin-top: 20px;">
+</form>
+
+<button id="downloadButton" style="display: none; font-size: 16px; padding: 10px 20px; background-color: #28a745; color: #fff; border: none; border-radius: 5px; cursor: pointer; margin-top: 20px;">Download JSON</button>
+
+
+<script>
+    {#document.getElementById('taskForm').addEventListener('submit', function (event) {#}
+    {#    event.preventDefault();#}
+    {#    const formData = new FormData(this);#}
+    {#    const jsonData = {};#}
+    {#    formData.forEach((value, key) => {#}
+    {#        if (key.includes('required_files[')) {#}
+    {#            const subKey = key.split('[')[1].split(']')[0];#}
+    {#            const mainKey = key.split('[')[0];#}
+    {#            if (!jsonData[mainKey]) {#}
+    {#                jsonData[mainKey] = {};#}
+    {#            }#}
+    {#            jsonData[mainKey][subKey] = value;#}
+    {#        } else if (key.includes('code_template[')) {#}
+    {#            if (!jsonData['code_template']) {#}
+    {#                jsonData['code_template'] = [];#}
+    {#            }#}
+    {#            const subKey = key.split('[')[1].split(']')[0];#}
+    {#            const index = parseInt(key.split('[')[2].split(']')[0]);#}
+    {#            if (!jsonData['code_template'][index]) {#}
+    {#                jsonData['code_template'][index] = {};#}
+    {#            }#}
+    {#            jsonData['code_template'][index][subKey] = value;#}
+    {#        } else {#}
+    {#            jsonData[key] = value;#}
+    {#        }#}
+    {#    });#}
+    {#    document.getElementById('jsonData').value = JSON.stringify(jsonData);#}
+    {#    document.getElementById('downloadButton').style.display = 'block';#}
+    {#);#}
+    document.getElementById('taskForm').addEventListener('submit', function (event) {
+        event.preventDefault();
+        const formData = new FormData(this);
+        const jsonData = {
+            problems: []
+        };
+        // Сбор данных для каждой задачи
+        const problemData = {};
+        formData.forEach((value, key) => {
+            // Исключение CSRF-токена из данных
+            if (key === 'csrfmiddlewaretoken') {
+                return;
+            }
+            // Определение ключей для каждой задачи
+            const keys = key.split(/[\[\]]+/);
+            if (keys.length === 1) {
+                problemData[key] = value.trim() || null; // Set empty fields to null
+            } else {
+                const parentKey = keys[0];
+                const childKey = keys[1];
+                if (!problemData[parentKey]) {
+                    problemData[parentKey] = {};
+                }
+                if (keys.length === 2) {
+                    problemData[parentKey] = value.trim() || null;
+                }
+                if (keys.length === 3) {
+                    if (!problemData[parentKey][childKey]) {
+                        problemData[parentKey][childKey] = {};
+                    }
+                    problemData[parentKey][childKey][keys[2]] = value.trim() || null; // Set empty fields to null
+                } else {
+                    if (!problemData[parentKey][childKey]) {
+                        problemData[parentKey][childKey] = [];
+                    }
+                    problemData[parentKey][childKey].push(value.trim() || null); // Set empty fields to null
+                }
+            }
+        });
+        jsonData.problems.push(problemData);
+
+        // Преобразование в JSON
+        const jsonString = JSON.stringify(jsonData, null, 2);
+        console.log(jsonString); // Вывод JSON в консоль
+
+        // Для отправки на сервер можно использовать этот JSON
+        // Для удобства вы можете установить его в скрытое поле формы и отправить форму на сервер
+        document.getElementById('jsonData').value = jsonString;
+        // Отправка формы на сервер
+        // this.submit();
+
+        document.getElementById('downloadButton').style.display = 'block';
+    });
+
+    document.getElementById('downloadButton').addEventListener('click', function () {
+        const jsonData = document.getElementById('jsonData').value;
+        const blob = new Blob([jsonData], {type: 'application/json'});
+        const downloadLink = document.createElement('a');
+        downloadLink.href = URL.createObjectURL(blob);
+        downloadLink.download = 'task_data.json';
+        downloadLink.click();
+    });
+
+    document.getElementById('addLanguage').addEventListener('click', function () {
+        const container = document.getElementById('codeTemplateContainer');
+        const languageTemplate = document.createElement('div');
+        languageTemplate.classList.add('languageTemplate');
+        languageTemplate.innerHTML = `
+                <label for="language"><span style="color: red;">*</span>Programming Language:</label>
+                <input type="text" class="language" name="code_template[language][]" required>
+                <label for="template"><span style="color: red;">*</span>Template:</label>
+                <textarea class="template" name="code_template[template][]" rows="4" cols="50" required></textarea><br><br>
+            `;
+        container.appendChild(languageTemplate);
+    });
+
+    document.getElementById('addProblemName').addEventListener('click', function () {
+        const container = document.getElementById('problemNameContainer');
+        const problemNameTemplate = document.createElement('div');
+        problemNameTemplate.classList.add('problemNameTemplate');
+        problemNameTemplate.innerHTML = `
+                <label for="language"><span style="color: red;">*</span>Programming Language:</label>
+                <input type="text" class="language" name="problem_name[language][]" required>
+                <label for="name"><span style="color: red;">*</span>Name:</label>
+                <textarea class="name" name="problem_name[name][]" rows="4" cols="50" required></textarea><br><br>
+            `;
+        container.appendChild(problemNameTemplate);
+    });
+
+    document.getElementById('addPrivateConstraints').addEventListener('click', function () {
+        const container = document.getElementById('privateConstraintsContainer');
+        const privateConstraintsTemplate = document.createElement('div');
+        privateConstraintsTemplate.classList.add('privateConstraintsTemplate');
+        privateConstraintsTemplate.innerHTML = `
+            <label for="progLanguage"><span style="color: red;">*</span>Programming Language:</label>
+            <input type="text" class="language" name="execution_constraints[private_constraints][language][]" required>
+            <label for="time_limit_seconds">Time Limit (seconds):</label>
+            <input type="number" class="time_limit_seconds"
+                   name="execution_constraints[private_constraints][time_limit_seconds][]" value="2" >
+            <label for="memory_limit_mb">Memory Limit (MB):</label>
+            <input type="number" class="memory_limit_mb"
+                   name="execution_constraints[private_constraints][memory_limit_mb][]" value="64.0" >
+            `;
+        container.appendChild(privateConstraintsTemplate);
+    });
+
+
+    document.getElementById('addFileTest').addEventListener('click', function () {
+        const container = document.getElementById('fileTestsContainer');
+        const fileTestTemplate = document.createElement('div');
+        fileTestTemplate.classList.add('fileTestTemplate');
+        fileTestTemplate.innerHTML = `
+                <label for="name"><span style="color: red;">*</span>Name:</label>
+                <input type="text" class="name" name="file_tests[name][]" required><br><br>
+
+                <label for="input_file_pattern"><span style="color: red;">*</span>Input File Pattern:</label>
+                <input type="text" class="input_file_pattern" name="file_tests[input_file_pattern][]" required><br><br>
+
+                <label for="answer_file_pattern"><span style="color: red;">*</span>Answer File Pattern:</label>
+                <input type="text" class="answer_file_pattern" name="file_tests[answer_file_pattern][]" required><br><br>
+
+                <h4><span style="color: red;">*</span>Tests</h4>
+                <div class="testsContainer">
+                    <div class="testTemplate">
+                        <label for="input_path"><span style="color: red;">*</span>Input Path:</label>
+                        <input type="text" class="input_path" name="file_tests[tests][0][input_path]" required><br><br>
+
+                        <label for="answer_path"><span style="color: red;">*</span>Answer Path:</label>
+                        <input type="text" class="answer_path" name="file_tests[tests][0][answer_path]" required><br><br>
+
+                        <label for="input_exists">Input Exists:</label>
+                        <input type="checkbox" class="input_exists" name="file_tests[tests][0][input_exists]"><br><br>
+
+                        <label for="answer_exists">Answer Exists:</label>
+                        <input type="checkbox" class="answer_exists" name="file_tests[tests][0][answer_exists]"><br><br>
+                    </div>
+                </div>
+                <button type="button" class="addTestButton">Add Test</button><br><br>
+            `;
+        container.appendChild(fileTestTemplate);
+    });
+
+    document.getElementById('addTestCase').addEventListener('click', function () {
+        const container = document.getElementById('testCasesContainer');
+        const testCaseTemplate = document.createElement('div');
+        testCaseTemplate.classList.add('testCaseTemplate');
+        testCaseTemplate.innerHTML = `
+                <label for="input"><span style="color: red;">*</span>Input:</label>
+                <input type="text" class="input" name="test_cases[input][]" required><br><br>
+
+                <label for="expected_output"><span style="color: red;">*</span>Expected Output:</label>
+                <input type="text" class="expected_output" name="test_cases[expected_output][]" required><br><br>
+            `;
+        container.appendChild(testCaseTemplate);
+    });
+
+    document.addEventListener('click', function (event) {
+        if (event.target.classList.contains('addTestButton')) {
+            const testsContainer = event.target.parentElement.querySelector('.testsContainer');
+            const testTemplate = event.target.parentElement.querySelector('.testTemplate').cloneNode(true);
+            testsContainer.appendChild(testTemplate);
+        }
+    });
+</script>
+</body>
+</html>

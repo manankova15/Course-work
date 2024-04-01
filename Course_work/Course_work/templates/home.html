@@ -28,7 +28,8 @@
     </style>
 </head>
 <body>
-    <h1>Select Conversion Option</h1>
+    <h1>Select Conversion Option or Create New Task</h1>
+    <a href="{% url 'new_task' %}">Create a new task</a>
     <form action="{% url 'convert' %}" method="post" enctype="multipart/form-data">
         {% csrf_token %}
         <select name="conversion_option">

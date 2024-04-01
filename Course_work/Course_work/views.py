@@ -11,6 +11,9 @@ from scripts.CrossConvertion import *
 def home(request):
     return render(request, 'home.html')
 
+def new_task(request):
+    return render(request, 'newTask.html')
+
 def convert(request):
     try:
         if request.method == 'POST':
@@ -62,3 +65,8 @@ def convert(request):
         return JsonResponse({'error': f'Error during conversion'}, status=500)
 
 
+def get_languages(request):
+    programming_languages = ["Java", "Python", "JavaScript", "C", "C++", "C#", "Ruby", "Go", "Swift", "Kotlin", "Rust",
+                             "PHP", "TypeScript", "Perl"]
+
+    return render(request, 'my_template.html', {'programming_languages': programming_languages})

@@ -14,19 +14,13 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
-# from django.contrib import admin
-# from django.urls import path
-#
-# urlpatterns = [
-#     path("admin/", admin.site.urls),
-# ]
 
 from django.urls import path
-from Course_work.views import home, convert  # Импортируем представления из Course_work.views
+from Course_work.views import home, convert, new_task
+
 
 urlpatterns = [
     path('', home, name='home'),  # URL для домашней страницы
     path('convert/', convert, name='convert'),  # URL для конвертации
+    path('new_task/', new_task, name='new_task'),  # URL для создания новой задачи
 ]
-
-

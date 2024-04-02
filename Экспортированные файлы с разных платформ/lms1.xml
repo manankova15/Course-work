@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quiz>
+<!-- question: 5498037  -->
+  <question type="coderunner">
+    <name>
+      <text>Алгоритм Дейкстры! Русское название</text>
+    </name>
+    <questiontext format="html">
+      <text><![CDATA[<p dir="ltr" style="text-align: left;">Given a directed weighted graph. For it you need to find the shortest distance from vertex S to vertex F.<br></p><p dir="ltr" style="text-align: left;"><strong>Input format</strong></ p><p dir="ltr" style="text-align: left;">The first line of the input contains three numbers: N, S and F (1 &lt;= N &lt;= 100, 1 &lt;= S , F &lt;= N), where N is the number of vertices of the graph. The next N lines contain N numbers each - the adjacency matrix of the graph, where the number in the i-th row and j-th column corresponds to an edge from i to j: -1 means the absence of an edge between the vertices, and any non-negative number means the presence of an edge of a given weight. The main diagonal of the matrix always contains zeros.<br></p><p dir="ltr" style="text-align: left;"><strong>Output format</strong></p><p dir= "ltr" style="text-align: left;"><span><span>Output the required shortest distance or -1 if there is no path between the specified vertices.</span><br></span></p>]]></text>
+    </questiontext>
+    <generalfeedback format="html">
+      <text></text>
+    </generalfeedback>
+    <defaultgrade>1.0000000</defaultgrade>
+    <penalty>0.0000000</penalty>
+    <hidden>0</hidden>
+    <idnumber></idnumber>
+    <coderunnertype>python3</coderunnertype>
+    <prototypetype>0</prototypetype>
+    <allornothing>1</allornothing>
+    <penaltyregime>10, 20, ...</penaltyregime>
+    <precheck>0</precheck>
+    <hidecheck>0</hidecheck>
+    <showsource>0</showsource>
+    <answerboxlines>18</answerboxlines>
+    <answerboxcolumns>100</answerboxcolumns>
+    <answerpreload></answerpreload>
+    <globalextra></globalextra>
+    <useace></useace>
+    <resultcolumns></resultcolumns>
+    <template></template>
+    <iscombinatortemplate></iscombinatortemplate>
+    <allowmultiplestdins></allowmultiplestdins>
+    <answer></answer>
+    <validateonsave>1</validateonsave>
+    <testsplitterre></testsplitterre>
+    <language></language>
+    <acelang></acelang>
+    <sandbox></sandbox>
+    <grader></grader>
+    <cputimelimitsecs></cputimelimitsecs>
+    <memlimitmb></memlimitmb>
+    <sandboxparams></sandboxparams>
+    <templateparams></templateparams>
+    <hoisttemplateparams>1</hoisttemplateparams>
+    <templateparamslang>None</templateparamslang>
+    <templateparamsevalpertry>0</templateparamsevalpertry>
+    <templateparamsevald>{}</templateparamsevald>
+    <twigall>0</twigall>
+    <uiplugin></uiplugin>
+    <uiparameters></uiparameters>
+    <attachments>0</attachments>
+    <attachmentsrequired>0</attachmentsrequired>
+    <maxfilesize>10240</maxfilesize>
+    <filenamesregex></filenamesregex>
+    <filenamesexplain></filenamesexplain>
+    <displayfeedback>1</displayfeedback>
+    <giveupallowed>0</giveupallowed>
+    <prototypeextra></prototypeextra>
+    <testcases>
+      <testcase testtype="0" useasexample="1" hiderestiffail="1" mark="1.0000000" >
+      <testcode>
+                <text></text>
+      </testcode>
+      <stdin>
+                <text>3 2 1
+0 1 1
+4 0 1
+2 1 0</text>
+      </stdin>
+      <expected>
+                <text>3
+</text>
+      </expected>
+      <extra>
+                <text></text>
+      </extra>
+      <display>
+                <text>SHOW</text>
+      </display>
+    </testcase>
+      <testcase testtype="0" useasexample="0" hiderestiffail="1" mark="1.0000000" >
+      <testcode>
+                <text></text>
+      </testcode>
+      <stdin>
+                <text>10 7 7
+0 -1 -1 62 38 -1 -1 -1 -1 -1 
+74 0 -1 -1 -1 -1 -1 -1 -1 -1 
+-1 -1 0 9 -1 -1 -1 -1 -1 100 
+-1 41 -1 0 -1 -1 30 -1 -1 -1 
+-1 6 -1 -1 0 -1 -1 -1 -1 -1 
+-1 -1 -1 11 -1 0 24 -1 -1 60 
+-1 -1 -1 -1 -1 72 0 55 -1 -1 
+37 -1 -1 -1 -1 57 -1 0 -1 -1 
+84 -1 -1 2 71 22 -1 -1 0 -1 
+-1 -1 -1 33 -1 53 -1 -1 -1 0 
+</text>
+      </stdin>
+      <expected>
+                <text>0
+</text>
+      </expected>
+      <extra>
+                <text></text>
+      </extra>
+      <display>
+                <text>HIDE</text>
+      </display>
+    </testcase>
+      <testcase testtype="0" useasexample="0" hiderestiffail="1" mark="1.0000000" >
+      <testcode>
+                <text></text>
+      </testcode>
+      <stdin>
+                <text>4 2 3
+0 -1 -1 -1
+1 0 -1 1
+1 -1 0 1
+-1 -1 -1 0
+</text>
+      </stdin>
+      <expected>
+                <text>-1
+</text>
+      </expected>
+      <extra>
+                <text></text>
+      </extra>
+      <display>
+                <text>HIDE</text>
+      </display>
+    </testcase>
+      <testcase testtype="0" useasexample="0" hiderestiffail="1" mark="1.0000000" >
+      <testcode>
+                <text></text>
+      </testcode>
+      <stdin>
+                <text>4 2 2
+0 -1 -1 -1
+1 0 -1 1
+1 -1 0 1
+-1 -1 -1 0
+</text>
+      </stdin>
+      <expected>
+                <text>0
+</text>
+      </expected>
+      <extra>
+                <text></text>
+      </extra>
+      <display>
+                <text>HIDE</text>
+      </display>
+    </testcase>
+      <testcase testtype="0" useasexample="0" hiderestiffail="1" mark="1.0000000" >
+      <testcode>
+                <text></text>
+      </testcode>
+      <stdin>
+                <text>10 4 4
+0 -1 -1 -1 -1 -1 -1 -1 -1 5 
+-1 0 5 -1 -1 -1 -1 3 -1 -1 
+-1 -1 0 -1 -1 5 -1 -1 -1 3 
+-1 -1 -1 0 -1 -1 -1 -1 -1 -1 
+-1 -1 -1 -1 0 -1 -1 -1 10 -1 
+-1 -1 -1 -1 -1 0 -1 -1 -1 5 
+-1 -1 -1 -1 -1 10 0 -1 -1 -1 
+-1 -1 -1 -1 -1 -1 -1 0 -1 -1 
+-1 -1 -1 -1 -1 -1 -1 2 0 -1 
+-1 -1 -1 -1 -1 -1 -1 -1 2 0 
+</text>
+      </stdin>
+      <expected>
+                <text>0
+</text>
+      </expected>
+      <extra>
+                <text></text>
+      </extra>
+      <display>
+                <text>HIDE</text>
+      </display>
+    </testcase>
+    </testcases>
+  </question>
+
+</quiz>

@@ -1,0 +1,134 @@
+{
+  "localizedNames": {},
+  "author": null,
+  "invocationLimits": null,
+  "testSets": {},
+  "perCompilerInvocationLimits": {},
+  "maxSourceSizeBytes": null,
+  "authorSolutionFile2CompilerId": {},
+  "checkerSettings": null,
+  "interactor": null,
+  "problemType": null,
+  "testFileType": null,
+  "generatorLaunchers": [],
+  "defaultLocale": null,
+  "fileSet": null,
+  "problemMetadata": {
+    "problemTypeMeta": "WITH_CHECKER",
+    "testFileType": "TEXT",
+    "shortName": "",
+    "defaultLocale": "ru",
+    "names": {
+      "ru": "Лицей. Задача №5. Обработка столбцов"
+    },
+    "statements": [
+      {
+        "locale": "ru",
+        "type": "MARKDOWN",
+        "path": "statements/.html/ru/texstatement.html",
+        "state": "VALID",
+        "rendered": true,
+        "texStatement": null,
+        "markdownStatement": {
+          "legend": "Дан двумерный массив размера $NxN$, заполненный целыми числами, не превосходящими по модулю $10^6$. Требуется выполнить преобразование: последний отрицательный элемент каждого столбца заменить нулем.\n\nВ случае, если в столбце нет отрицательных элементов, ничего менять не стоит.",
+          "inputFormat": "На вход в первой строке подается число $ 0 < N < 10^6$ - размерность матрицы. Затем в следующих $N$ строках подаются строки матрицы.",
+          "outputFormat": "Программа должна вывести преобразованную матрицу на экран, где каждая строка матрицы следует с новой строки, а элементы в матрицах разделены пробелом.",
+          "notes": "",
+          "showLimits": true
+        },
+        "renderingError": ""
+      }
+    ],
+    "fileSet": {
+      "inputFile": "input.txt",
+      "outputFile": "output.txt",
+      "redirectStdin": true,
+      "redirectStdout": true
+    },
+    "solutionLimits": {
+      "timeLimitMillis": 2000,
+      "idlenessLimitMillis": 10000,
+      "memoryLimit": 67108864,
+      "outputLimit": 67108864
+    }
+  },
+  "compilerGroupLimits": [],
+  "testSets": [
+    {
+      "name": "samples",
+      "inputFilePattern": "new_tests/{1}",
+      "answerFilePattern": "*.a",
+      "matchedTests": [
+        {
+          "inputPath": "new_tests/1",
+          "answerPath": "new_tests/1.a",
+          "inputExists": true,
+          "answerExists": true
+        }
+      ]
+    },
+    {
+      "name": "All tests",
+      "inputFilePattern": "new_tests/{1-}",
+      "answerFilePattern": "*.a",
+      "matchedTests": [
+        {
+          "inputPath": "new_tests/1",
+          "answerPath": "new_tests/1.a",
+          "inputExists": true,
+          "answerExists": true
+        },
+        {
+          "inputPath": "new_tests/2",
+          "answerPath": "new_tests/2.a",
+          "inputExists": true,
+          "answerExists": true
+        }
+      ]
+    }
+  ],
+  "generators": [],
+  "generateTestCommands": [],
+  "solutions": [],
+  "tags": [],
+  "includeForCompileFiles": [],
+  "includeForRunFiles": [],
+  "postProcessFiles": [],
+  "validators": [],
+  "htmlGeneratorType": "YA_CONTEST",
+  "compilationLimits": {
+    "timeLimitMillis": 60000,
+    "idlenessLimitMillis": 60000,
+    "memoryLimit": 1598029824,
+    "outputLimit": 100000000
+  },
+  "customCompilationLimits": [],
+  "fieldTypeMeta": null,
+  "validation": {},
+  "parentProblemId": "",
+  "rootProblemId": "",
+  "problemCorrectAnswers": [],
+  "problemCompilers": {
+    "additionalCompilers": {}
+  },
+  "metaInfo": null,
+  "testDataTypeSettings": null,
+  "checkerSettings": {
+    "checkerType": "STANDARD",
+    "limits": {
+      "timeLimitMillis": 10000,
+      "idlenessLimitMillis": 10000,
+      "memoryLimit": 268435456,
+      "outputLimit": 268435456
+    },
+    "env": {},
+    "checkerFiles": null,
+    "isScoring": null,
+    "checkerId": "cmp_file",
+    "eps": null,
+    "absolute": null
+  },
+  "interactorSettingsMeta": null,
+  "answerTypeMeta": null,
+  "pictureSettingsMeta": null
+}
